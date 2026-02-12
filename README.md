@@ -65,7 +65,7 @@ Example: `myserver.duckdns.org` → `203.0.113.50` (your VPS IP)
 ### Step 2️⃣: Run the Installer
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/x011/smtp-tunnel-proxy/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/sodas-cheddar/smtp-tunnel-proxy/main/install.sh | sudo bash
 ```
 
 The installer will:
