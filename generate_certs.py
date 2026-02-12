@@ -33,7 +33,6 @@ def generate_ca_certificate(
     common_name: str = "SMTP Tunnel CA",
     days_valid: int = 3650
 ) -> x509.Certificate:
-    """Generate self-signed CA certificate."""
     subject = issuer = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
         x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "California"),
@@ -68,9 +67,13 @@ def generate_ca_certificate(
             ),
             critical=True,
         )
+        # ← NEW: Subject Key Identifier (required for modern validation)
+        .add_extension(
+            x509.SubjectKeyIdentifier.from_public_key(private_key.public_key()),
+            critical=False,
+        )
         .sign(private_key, hashes.SHA256(), default_backend())
     )
-
     return cert
 
 
@@ -81,10 +84,6 @@ def generate_server_certificate(
     hostname: str = "mail.example.com",
     days_valid: int = 1095
 ) -> x509.Certificate:
-    """
-    Generate server certificate signed by CA.
-    Mimics a real mail server certificate.
-    """
     subject = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, "US"),
         x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, "California"),
@@ -93,12 +92,14 @@ def generate_server_certificate(
         x509.NameAttribute(NameOID.COMMON_NAME, hostname),
     ])
 
-    # Subject Alternative Names (important for TLS validation)
     san = x509.SubjectAlternativeName([
         x509.DNSName(hostname),
         x509.DNSName(f"smtp.{hostname.split('.', 1)[-1] if '.' in hostname else hostname}"),
         x509.DNSName("localhost"),
     ])
+
+    # ← NEW: Get CA's SKI for AKI
+    ca_ski = ca_cert.extensions.get_extension_for_class(x509.SubjectKeyIdentifier).value
 
     cert = (
         x509.CertificateBuilder()
@@ -134,9 +135,18 @@ def generate_server_certificate(
             ]),
             critical=False,
         )
+        # ← NEW: Subject Key Identifier on server cert
+        .add_extension(
+            x509.SubjectKeyIdentifier.from_public_key(server_key.public_key()),
+            critical=False,
+        )
+        # ← NEW: Authority Key Identifier (this fixes your exact error)
+        .add_extension(
+            x509.AuthorityKeyIdentifier.from_issuer_subject_key_identifier(ca_ski),
+            critical=False,
+        )
         .sign(ca_key, hashes.SHA256(), default_backend())
     )
-
     return cert
 
 
