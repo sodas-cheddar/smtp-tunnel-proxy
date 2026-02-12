@@ -16,7 +16,7 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # GitHub raw URL base
-GITHUB_RAW="https://raw.githubusercontent.com/x011/smtp-tunnel-proxy/main"
+GITHUB_RAW="https://raw.githubusercontent.com/sodas-cheddar/smtp-tunnel-proxy/main"
 
 # Installation directories
 INSTALL_DIR="/opt/smtp-tunnel"
