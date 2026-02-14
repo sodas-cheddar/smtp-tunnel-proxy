@@ -3,7 +3,7 @@
 # SMTP Tunnel Proxy - Server Installation Script
 #
 # One-liner installation:
-#   curl -sSL https://raw.githubusercontent.com/x011/smtp-tunnel-proxy/main/install.sh | sudo bash
+#   curl -sSL https://raw.githubusercontent.com/sodas-cheddar/smtp-tunnel-proxy/main/install.sh | sudo bash
 #
 # Version: 1.3.0
 
