@@ -13,7 +13,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 # GitHub raw URL
-GITHUB_RAW="https://raw.githubusercontent.com/x011/smtp-tunnel-proxy/main"
+GITHUB_RAW="https://raw.githubusercontent.com/sodas-cheddar/smtp-tunnel-proxy/main"
 
 # Installation directory
 INSTALL_DIR="/opt/smtp-tunnel"
